@@ -3,6 +3,7 @@
 import {
   NativeModules,
   Platform,
+  Linking
 } from 'react-native';
 import RNFS from 'react-native-fs';
 
@@ -30,11 +31,13 @@ class AppUpdate {
     if (jobId !== -1) {
       return;
     }
-    if (!this.options.apkVersionUrl) {
-      console.log("apkVersionUrl doesn't exist.");
-      return;
+    if(this.options && this.options.playStoreUrl){
+      Linking.openURL(this.options.playStoreUrl)
+    }else if (this.options && this.options.apkVersionUrl) {
+      this.GET(this.options.apkVersionUrl, this.getApkVersionSuccess.bind(this), this.getVersionError.bind(this));
+    }else {
+      console.log("Either playstore path or apk url is needed")
     }
-    this.GET(this.options.apkVersionUrl, this.getApkVersionSuccess.bind(this), this.getVersionError.bind(this));
   }
 
   getApkVersionSuccess(remote) {
