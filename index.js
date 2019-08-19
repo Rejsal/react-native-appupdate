@@ -31,13 +31,11 @@ class AppUpdate {
     if (jobId !== -1) {
       return;
     }
-    if(this.options && this.options.playStoreUrl){
-      Linking.openURL(this.options.playStoreUrl)
-    }else if (this.options && this.options.apkVersionUrl) {
-      this.GET(this.options.apkVersionUrl, this.getApkVersionSuccess.bind(this), this.getVersionError.bind(this));
-    }else {
-      console.log("Either playstore path or apk url is needed")
+    if (!this.options.apkVersionUrl) {
+      console.log("apkVersionUrl doesn't exist.");
+      return;
     }
+    this.GET(this.options.apkVersionUrl, this.getApkVersionSuccess.bind(this), this.getVersionError.bind(this));
   }
 
   getApkVersionSuccess(remote) {
@@ -51,7 +49,10 @@ class AppUpdate {
       } else if (this.options.needUpdateApp) {
         this.options.needUpdateApp((isUpdate) => {
           if (isUpdate) {
-            this.downloadApk(remote);
+            if(remote && remote.playStoreUrl)
+              Linking.openURL(remote.playStoreUrl)
+            else
+              this.downloadApk(remote);
           }
         });
       }
