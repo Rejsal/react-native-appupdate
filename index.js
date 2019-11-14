@@ -39,8 +39,9 @@ class AppUpdate {
   }
 
   getApkVersionSuccess(remote) {
-    console.log("getApkVersionSuccess", remote);
-    if (RNAppUpdate.versionName !== remote.versionName) {
+    // console.log("getApkVersionSuccess", remote);
+    if(RNAppUpdate && RNAppUpdate.versionCode && remote && remote.versionCode){
+    if (RNAppUpdate.versionCode < remote.versionCode) {
       if (remote.forceUpdate) {
         if(this.options.forceUpdateApp) {
           this.options.forceUpdateApp();
@@ -59,6 +60,9 @@ class AppUpdate {
     } else if(this.options.notNeedUpdateApp) {
       this.options.notNeedUpdateApp();
     }
+  }else if(this.options.notNeedUpdateApp) {
+    this.options.notNeedUpdateApp();
+  }
   }
 
   downloadApk(remote) {
