@@ -5,7 +5,6 @@ import {
   Platform,
   Linking
 } from 'react-native';
-import RNFS from 'react-native-fs';
 
 const RNAppUpdate = NativeModules.RNAppUpdate;
 
@@ -66,39 +65,7 @@ class AppUpdate {
   }
 
   downloadApk(remote) {
-    const progress = (data) => {
-      const percentage = ((100 * data.bytesWritten) / data.contentLength) | 0;
-      this.options.downloadApkProgress && this.options.downloadApkProgress(percentage);
-    };
-    const begin = (res) => {
-      console.log("downloadApkStart");
-      this.options.downloadApkStart && this.options.downloadApkStart();
-    };
-    const progressDivider = 1;
-    const downloadDestPath = `${RNFS.DocumentDirectoryPath}/NewApp.apk`;
 
-    const ret = RNFS.downloadFile({
-      fromUrl: remote.apkUrl,
-      toFile: downloadDestPath,
-      begin,
-      progress,
-      background: true,
-      progressDivider
-    });
-
-    jobId = ret.jobId;
-
-    ret.promise.then((res) => {
-      console.log("downloadApkEnd");
-      this.options.downloadApkEnd && this.options.downloadApkEnd();
-      RNAppUpdate.installApk(downloadDestPath);
-
-      jobId = -1;
-    }).catch((err) => {
-      this.downloadApkError(err);
-
-      jobId = -1;
-    });
   }
 
   getAppStoreVersion() {
